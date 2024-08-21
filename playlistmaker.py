@@ -1,6 +1,7 @@
 '''
-Minecraft Playlist Maker 0.0.1
+Minecraft Playlist Maker 0.0.2
 Create a resource pack that replaces Minecraft's built-in music disc with music files of your choice.
+Now updated for MC 1.21!
 Author: NerdyKyogre
 '''
 
@@ -12,14 +13,17 @@ import shutil
 from PIL import ImageTk, Image  
 
 #original song titles and special locations are global constants just for convenience since the main logic loop involves multiple functions due to tkinter limitations
-DISC_TITLES = ["5","11","13","blocks","cat","chirp","far","mall","mellohi","otherside","pigstep","relic","stal","strad","wait","ward"] #these constants of the original titles will be useful for the loop
+DISC_TITLES = ["5","11","13","blocks","cat","chirp","creator","creator_music_box","far","mall","mellohi","otherside","pigstep","precipice","relic","stal","strad","wait","ward"] #these constants of the original titles will be useful for the loop
 LOCATIONS = {
-    "5": "in ancient city chests as fragments to be crafted.",
-    "13": "in dungeon, mansion, or ancient city chests.",
-    "cat": "in dungeon, mansion, or ancient city chests.",
-    "otherside": "in dungeon, ancient city, or stronghold chests.",
-    "pigstep": "in bastion chests.",
-    "relic": "in suspicious gravel at trail ruins."
+    "5": "in ancient city chests as fragments to be crafted",
+    "13": "in dungeon, mansion, or ancient city chests",
+    "cat": "in dungeon, mansion, or ancient city chests",
+    "creator": "in ominous vaults inside trial chambers",
+    "creator_music_box": "in pots in the halls of trial chambers",
+    "otherside": "in dungeon, ancient city, or stronghold chests",
+    "pigstep": "in bastion chests",
+    "precipice": "in trial chamber vaults",
+    "relic": "in suspicious gravel at trail ruins"
 }
 
 ROOT_DIR = os.getcwd() #this is convenient in the compression phase when we're not in this directory, which is always once the pack's file structure exists
@@ -76,10 +80,10 @@ def pack_ver(name):
 
     clear_frame()
     
-    packVer = 15
-    #tool is designed for 1.20 but this will allow smart resource pack creators to use different versions without effort on my part
+    packVer = 34 #this shouldn't do anything but commenting it out breaks things, not sure why
+    #tool is designed for 1.21 but this will allow smart resource pack creators to use different versions without effort on my part
     label = tk.Label(
-        text="Now, let's select a resource pack version.\nIf you don't know what you're doing, leave this empty \nand it will default to 15 (Minecraft 1.20/1.20.1).\nIf you want to use a different Minecraft version, enter the corresponding pack version number."
+        text="Now, let's select a resource pack version.\nIf you don't know what you're doing, leave this empty \nand it will default to 34 (Minecraft 1.21(.X)).\nIf you want to use a different Minecraft version, enter the corresponding pack version number."
     )
     label.pack(expand=True)
     verEnt = tk.Entry(font='Consolas 16')
@@ -93,11 +97,11 @@ def pack_info(ver):
     Sets pack version, prompts user for description
     - ver: pack version as defined by user, as a string
     '''
-    #set pack version if user entered a valid number, otherwise default to 15
+    #set pack version if user entered a valid number, otherwise default to 34
     try: 
         ver = int(ver)
     except ValueError:
-        ver = 15
+        ver = 34
     
     clear_frame()
 
@@ -199,7 +203,7 @@ def add_song(song, title, i):
     - i: position in loop, as int
     '''
     lang = open(os.path.join(os.getcwd(), 'lang', 'en_us.json'), "a") #add title to lang file
-    lang.write("    \"item.minecraft.music_disc_" + song + ".desc\": \"" + title + "\"")
+    lang.write("    \"jukebox_song.minecraft." + song + "\": \"" + title + "\"")
     if i >= len(DISC_TITLES): 
         #decide whether to add another song or finish
         lang.write("\n}")
